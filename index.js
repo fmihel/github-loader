@@ -42,7 +42,7 @@ async function unpack_zip_to(zip, toPath) {
     // });
 }
 
-function main(params) {
+function main() {
     const config = load_config();
 
     const reps = {
@@ -73,7 +73,6 @@ function main(params) {
     });
 
     list.reduce((p, f) => p.then(f), Promise.resolve());
-    // download('https://github.com/fmihel/php-config/archive/refs/heads/main.zip', 'git\\fmihel\\php-config\\main.zip');
 }
 
 main();

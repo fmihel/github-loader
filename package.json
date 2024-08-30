@@ -1,0 +1,41 @@
+{
+  "name": "github-loader",
+  "version": "1.0.0",
+  "description": "github loader",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fmihel/github-loader.git"
+  },
+  "keywords": [
+    "github",
+    "loader",
+    "load",
+    "project",
+    "repository"
+  ],
+  "author": "fmihel76@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fmihel/github-loader/issues"
+  },
+  "homepage": "https://github.com/fmihel/github-loader#readme",
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/register": "^7.24.6",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-import-resolver-webpack": "^0.13.8",
+    "eslint-plugin-import": "^2.29.1"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "node-fetch": "^3.3.2",
+    "unzipper": "^0.12.3"
+  }
+}

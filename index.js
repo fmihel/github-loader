@@ -12,7 +12,7 @@ function load_config() {
     const configJSON = fs.readFileSync(configFileName);
     return {
         mode: 'prod',
-        dest: './git',
+        dest: './git-repo',
         tmp_path: './tmp_git_path',
         getZipUrl(key, val) {
             return `https://github.com/${key}/archive/refs/${val.indexOf('tags/') === 0 ? val : (`heads/${val}`)}.zip`;
@@ -30,9 +30,10 @@ async function load_zip_repo(url, filePath) {
 
 async function unpack_zip_to(zip, toPath) {
     const directory = await unzipper.Open.file(zip);
-    // console.log('directory', directory);
-    await directory.extract({ path: toPath });
 
+    // console.log('directory', directory.files[0]);
+    await directory.extract({ path: toPath });
+    return directory.files[0].path.replace('/', '');
     // return new Promise((resolve, reject) => {
     //     directory.files[0]
     //         .stream()
@@ -50,24 +51,38 @@ function main() {
         ...config.prod,
     };
 
+    if (!dir.exists(config.dest)) {
+        dir.create(config.dest);
+    }
+
     const list = [];
     const keys = Object.keys(reps);
+
     keys.map((key) => {
         const url = config.getZipUrl(key, reps[key]);
+        const rout = key.split('/');
+        const author = rout[0];
+        const authorPath = path.join(config.dest, author);
+        const project = rout[1];
+        // const repoPath = path.join(config.dest, key);// author+project
         const akey = reps[key].split('/');
-        const repoPath = path.join(config.dest, key);
         const name = `${akey[akey.length - 1]}.zip`;
 
         // console.log({
-        //     key, url, akey, repoPath, name, res: path.join(repoPath, name),
+        //     key, url, akey, repoPath, name, res: path.join(repoPath, name), author, project,
         // });
-        dir.del(repoPath);
-        dir.create(repoPath);
+
+        if (!dir.exists(authorPath)) {
+            dir.create(authorPath);
+        }
 
         list.push(async () => {
-            const zip = path.join(repoPath, name);
+            const zip = path.join(authorPath, name);
             await load_zip_repo(url, zip);
-            await unpack_zip_to(zip, repoPath);
+
+            const to = await unpack_zip_to(zip, authorPath);
+            dir.rename(path.join(authorPath, to), path.join(authorPath, project));
+            fs.unlinkSync(zip);
         });
         // load_zip_repo(url, path.join(repoPath, name));
     });

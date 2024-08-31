@@ -8,5 +8,14 @@ class Dir {
     del(path) {
         fs.rmSync(path, { recursive: true, force: true });
     }
+
+    rename(from, to) {
+        fs.renameSync(from, to);
+    }
+
+    exists(path) {
+        return fs.existsSync(path);
+    }
 }
+
 module.exports = new Dir();

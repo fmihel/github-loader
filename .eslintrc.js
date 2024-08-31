@@ -50,13 +50,14 @@ module.exports = {
         'import/no-unresolved': 'off',
         'no-underscore-dangle': 'off',
         'max-len': 'off',
+        // 'no-multiple-empty-lines': 'error',
         indent: [
             'error',
             4,
         ],
         'linebreak-style': [
             'error',
-            'windows',
+            'unix',
         ],
         quotes: [
             'error',

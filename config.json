@@ -5,6 +5,7 @@
     "prod":{
         "fmihel/php-config":"main",
         "fmihel/redux-wrapper":"master",
-        "fmihel/ajax-plugin-session":"tags/v1.0.5"
+        "fmihel/ajax-plugin-session":"tags/v1.0.5",
+        "jquery/jquery":"main"
     }
 }

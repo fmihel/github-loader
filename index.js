@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { exit } = require('process');
 const unzipper = require('unzipper');
+const { globSync } = require('glob');
+const aaa = require('aaa');
 const download = require('./src/download');
 const dir = require('./src/dir');
 
@@ -90,4 +92,9 @@ function main() {
     list.reduce((p, f) => p.then(f), Promise.resolve());
 }
 
-main();
+// const list = globSync('git-repo/**/*.php');
+
+// console.log(list);
+// main();
+
+aaa();

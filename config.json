@@ -1,11 +1,17 @@
 {
-    "dev":{
-            
+    "mode": "prod",
+    "dest": "./git-repo",
+    "cache": "./git-repo",
+    "dev": {
+        "fmihel/redux-wrapper": "master",
+        "fmihel/ajax-plugin-session": "tags/v1.0.5"
     },
-    "prod":{
-        "fmihel/php-config":"main",
-        "fmihel/redux-wrapper":"master",
-        "fmihel/ajax-plugin-session":"tags/v1.0.5",
-        "jquery/jquery":"main"
+    "prod": {
+        "fmihel/console-log": "master",
+        "fmihel/php-config": "main",
+        "fmihel/wu": "master",
+        "jquery/jquery": "main"
     }
+
+
 }

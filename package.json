@@ -2,10 +2,9 @@
   "name": "github-loader",
   "version": "1.0.0",
   "description": "github loader",
-  "main": "index.js",
+  "main": "gitrep.js",
   "scripts": {
-    "test": "node index.js",
-    "run":"node ./node_modules/aaa"
+    "test": "node gitrep"
   },
   "repository": {
     "type": "git",
@@ -37,7 +36,6 @@
   "dependencies": {
     "glob": "^11.0.0",
     "node-fetch": "^3.3.2",
-    "unzipper": "^0.12.3",
-    "aaa":"^1.0.0"
+    "unzipper": "^0.12.3"
   }
 }

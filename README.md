@@ -6,25 +6,26 @@ The project is under development.
 git-repo
 
 ```bash
-$ gl install
-$ gl i   
+$ gitrep install
+```
+```bash
+$ gitrep install -dest=./dest
 ```
 
 Добавление репозитория
 
 ```bash
-$ gl install <REPO>
-$ gl i <REPO>
+$ gitrep install <REPO>
 ```
 
 Обновление кэша и репозиториев
 
 ```bash
-$ gl update  
+$ gitrep update  
 ```
 
 Удаление репозитория из папки и конфига
 
 ```bash
-$ gl uninstall <PACK>  
+$ gitrep uninstall <PACK>  
 ```

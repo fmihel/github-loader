@@ -3,6 +3,7 @@ const path = require('path');
 const zip = require('./zip');
 const download = require('./download');
 const configFile = require('./config');
+const filter = require('./filter');
 
 function rnd(min, max) {
     return Math.random() * (max - min) + min;
@@ -192,6 +193,8 @@ class actions {
 
             state = `rename ${path.join(authorPath, to)} to ${target}`;
             fs.renameSync(path.join(authorPath, to), target);
+
+            filter.apply(repoName, target, config);
         } catch (e) {
             throw new Error(`${state}`);
             // console.log('---------------------------------------');

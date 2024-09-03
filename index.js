@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-const { globSync } = require('glob');
 const config = require('./src/config');
 const actions = require('./src/actions');
 const argv = require('./src/argv');

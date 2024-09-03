@@ -1,19 +1,33 @@
 {
-    "mode": "prod",
-    "dest": "./gitrep",
-    "cache": "./gitrep",
-    "dev": {
+    "#mode": "prod",
+    "#dest": "./gitrep",
+    "#cache": "./gitrep",
+    "#dev": {
         "fmihel/redux-wrapper": "master",
         "fmihel/ajax-plugin-session": "tags/v1.0.5",
         "fmihel/php-cache": "main",
         "jquery/jquery": "main"
     },
-    "prod": {
+    "#prod": {
         "fmihel/console-log": "master",
         "fmihel/php-config": "main",
         "fmihel/wu": "master"
     },
-    "#mode": "prod",
-    "#dest": "./gitrep",
-    "#cache": "./gitrep"
+    "exclude": [
+        "*.json",
+        "*.bat",
+        ".gitignore",
+        "*.pas",
+        "*.dfm",
+        "*.babelrc",
+        ".npmignore",
+        ".eslintignore",
+        "composer.*",
+        "*.js",
+        "*.md"
+    ],
+    "prod": {
+        "fmihel/ajax-plugin-session": "main",
+        "fmihel/wu": "master"
+    }
 }

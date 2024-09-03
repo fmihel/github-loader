@@ -15,6 +15,8 @@ const defalt = {
     dev: {},
     prod: {},
     // ...JSON.parse(configJSON),
+    exclude: [],
+    include: [],
 };
 
 class Config {
@@ -51,7 +53,23 @@ class Config {
     }
 
     save() {
-        const json = JSON.stringify(this.data, null, '    ');
+        /** сохраняем только те поля , что есть в самом конфиге gitrep.json
+         * если нет dev или prod тоже добавляем их
+        */
+        const config = this.load();
+        const keys = Object.keys(config);
+        if (!('dev' in config) && this.data.dev && Object.keys(this.data.dev).length) {
+            keys.push('dev');
+        }
+        if (!('prod' in config) && this.data.prod && Object.keys(this.data.prod).length) {
+            keys.push('prod');
+        }
+
+        keys.map((key) => {
+            config[key] = this.data[key];
+        });
+
+        const json = JSON.stringify(config, null, '    ');
         fs.writeFileSync(this.configFileName, json);
     }
 }

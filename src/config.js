@@ -6,7 +6,7 @@ const defalt = {
 
     mode: 'prod', // dev | prod
     dest: '', // path to install, if empty(dest) => dest = cache
-    cache: './git-repo',
+    cache: './gitrep',
 
     getZipUrl(key, val) {
         return `https://github.com/${key}/archive/refs/${val.indexOf('tags/') === 0 ? val : (`heads/${val}`)}.zip`;
@@ -19,8 +19,8 @@ const defalt = {
 
 class Config {
     constructor() {
-        this.configFileName = path.join(__dirname, '/../config.json');
-        this.isModif = false;
+        // this.configFileName = path.join(__dirname, '/../config.json');
+        this.configFileName = path.join(process.cwd(), 'gitrep.json');
         this.data = {
             ...defalt,
             ...this.load(),
@@ -38,7 +38,6 @@ class Config {
     }
 
     add(data) {
-        this.isModif = true;
         this.data = {
             ...this.data,
             ...data,

@@ -2,9 +2,10 @@
   "name": "github-loader",
   "version": "1.0.0",
   "description": "github loader",
-  "main": "gitrep.js",
+  "main": "index.js",
   "scripts": {
-    "test": "node gitrep"
+    "test": "node gitrep",
+    "gitrep":"node node_modules/fmihel-gitrep"
   },
   "repository": {
     "type": "git",

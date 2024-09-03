@@ -6,6 +6,7 @@ const argv = require('./src/argv');
 
 function main() {
     const { action } = argv;
+
     if (action.type === 'install') {
         if (!action.reps.length) {
             actions.install(config.get());

@@ -1,0 +1,19 @@
+{
+    "mode": "prod",
+    "dest": "./gitrep",
+    "cache": "./gitrep",
+    "dev": {
+        "fmihel/redux-wrapper": "master",
+        "fmihel/ajax-plugin-session": "tags/v1.0.5",
+        "fmihel/php-cache": "main",
+        "jquery/jquery": "main"
+    },
+    "prod": {
+        "fmihel/console-log": "master",
+        "fmihel/php-config": "main",
+        "fmihel/wu": "master"
+    },
+    "#mode": "prod",
+    "#dest": "./gitrep",
+    "#cache": "./gitrep"
+}

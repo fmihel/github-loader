@@ -4,8 +4,16 @@ const zip = require('./zip');
 const download = require('./download');
 const configFile = require('./config');
 
-class gitrep {
+function rnd(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+class actions {
     static async install(config) {
+        const stat = {
+            all: 0,
+            withError: 0,
+        };
         const t = this;
         const mode = (config.dest === config.cache) ? 'dev' : config.mode;
         const reps = {
@@ -16,10 +24,20 @@ class gitrep {
         const list = [];
 
         Object.keys(reps).map((repoName) => {
-            list.push(async () => t._installRep(repoName, reps[repoName], config));
+            list.push(async () => {
+                stat.all++;
+                try {
+                    await t._installRep(repoName, reps[repoName], config);
+                    console.log(`${repoName}: ok`);
+                } catch (e) {
+                    console.log(`error install ${repoName}: ${e.message}`);
+                    stat.withError++;
+                }
+            });
         });
 
         await list.reduce((p, f) => p.then(f), Promise.resolve());
+        console.log(`install ${stat.all} repo with ${stat.withError} errors`);
     }
 
     static async add(reps, config) {
@@ -34,7 +52,8 @@ class gitrep {
                 console.log(`${repoName} is already install, run "uninstall ${repoName}" before`);
             } else {
                 list.push(async () => {
-                    if (await t._installRep(repoName, head, config)) {
+                    try {
+                        await t._installRep(repoName, head, config);
                         configFile.add({
                             ...config,
                             [mode]: {
@@ -42,6 +61,9 @@ class gitrep {
                                 [repoName]: head,
                             },
                         });
+                        console.log(`${repoName}: ok`);
+                    } catch (e) {
+                        console.log(`error install ${repoName}: ${e.message}`);
                     }
                 });
             }
@@ -59,14 +81,15 @@ class gitrep {
     }
 
     static async update(reps, config) {
+        const t = this;
         const conf = {
             ...config,
             dest: config.cache,
-            mode: 'prod',
         };
+        const list = [];
         reps.map((repoName) => {
-            const cachePath = path.resolve(path.join(config.cache, '_cache', repoName));
-            const devPath = path.resolve(path.join(config.cache, repoName));
+            const cachePath = path.resolve(path.join(conf.cache, '_cache', repoName));
+            const devPath = path.resolve(path.join(conf.cache, repoName));
 
             if (fs.existsSync(cachePath)) {
                 fs.rmSync(cachePath, { recursive: true, force: true });
@@ -75,9 +98,21 @@ class gitrep {
             if (fs.existsSync(devPath)) {
                 fs.rmSync(cachePath, { recursive: true, force: true });
             }
-        });
 
-        await this.install(conf);
+            let head = 'main';
+            if (repoName in conf.dev) head = conf.dev[repoName];
+            else if (repoName in conf.prod) head = conf.prod[repoName];
+
+            list.push(async () => {
+                try {
+                    await t._installRep(repoName, head, conf);
+                    console.log(`update ${repoName}: ok`);
+                } catch (e) {
+                    console.log(`error update ${repoName}: ${e.message}`);
+                }
+            });
+        });
+        await list.reduce((p, f) => p.then(f), Promise.resolve());
     }
 
     static async unInstall(reps, config) {
@@ -120,8 +155,6 @@ class gitrep {
     static async _installRep(repoName, head, config) {
         let state = 'init';
         try {
-            // console.log(`install ${repoName} ..`);
-
             const url = config.getZipUrl(repoName, head);
 
             const repoNames = repoName.split('/');
@@ -136,40 +169,38 @@ class gitrep {
             const zipFileInCache = path.join(cachePath, zipFileName);
             const target = path.join(authorPath, project);
 
-            // console.log({
-            //     zipFileInCache, authorPath, target, to: path.join(authorPath),
-            // });
-
             if (!fs.existsSync(authorPath)) {
+                state = `mkdir ${authorPath}`;
                 fs.mkdirSync(authorPath, { recursive: true });
             }
             if (!fs.existsSync(cachePath)) {
+                state = `mkdir ${cachePath}`;
                 fs.mkdirSync(cachePath, { recursive: true });
             }
-
             if (fs.existsSync(target)) {
+                state = `del/rm ${target}`;
                 fs.rmSync(target, { recursive: true, force: true });
             }
 
             if (!fs.existsSync(zipFileInCache)) {
-                state = 'download';
+                state = `download ${url} to ${zipFileInCache}`;
                 await download(url, zipFileInCache);
             }
-            state = 'unpack';
+
+            state = `unpack ${zipFileInCache} to ${authorPath}`;
             const to = await zip.unpack(zipFileInCache, authorPath);
+
+            state = `rename ${path.join(authorPath, to)} to ${target}`;
             fs.renameSync(path.join(authorPath, to), target);
-
-            console.log(`install ok: ${repoName}`);
-
-            return true;
         } catch (e) {
-            console.log('---------------------------------------');
-            console.log(`install error on ${state}: ${repoName}`);
-            console.error(e);
-            console.log('---------------------------------------');
+            throw new Error(`${state}`);
+            // console.log('---------------------------------------');
+            // console.log(`install error on ${state}: ${repoName}`);
+            // console.error(e);
+            // console.log('---------------------------------------');
         }
-        return false;
+        return true;
     }
 }
 
-module.exports = gitrep;
+module.exports = actions;

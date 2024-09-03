@@ -2,20 +2,24 @@ The project is under development.
 
 Варианты использования
 <br><br>
-Используя информацию из gl.config.json загружает репозитории в папку
-git-repo
+Используя информацию из `gitrep.json` загружает репозитории в папку
+`gitrep`
 
 ```bash
-$ gitrep install
+$ node node_modules/fmihel-gitrep install
+$ node node_modules/fmihel-gitrep gitrep i
 ```
+Выгрузка в другую папку (к примеру ./dest)
 ```bash
-$ gitrep install -dest=./dest
+$ node node_modules/fmihel-gitrep install dest=./dest
+$ node node_modules/fmihel-gitrep i dest=./dest
 ```
 
 Добавление репозитория
 
 ```bash
-$ gitrep install <REPO>
+$ node node_modules/fmihel-gitrep install <REPO> <REPO> ...
+$ node node_modules/fmihel-gitrep i <REPO> <REPO> ...
 ```
 
 Обновление кэша и репозиториев
@@ -23,9 +27,15 @@ $ gitrep install <REPO>
 ```bash
 $ gitrep update  
 ```
+Обновление отдельных репозиториев 
+
+```bash
+$ gitrep update <REPO> <REPO> .... 
+```
+
 
 Удаление репозитория из папки и конфига
 
 ```bash
-$ gitrep uninstall <PACK>  
+$ gitrep uninstall <REPO>  
 ```

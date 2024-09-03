@@ -11,23 +11,29 @@
     "#prod": {
         "fmihel/console-log": "master",
         "fmihel/php-config": "main",
-        "fmihel/wu": "master"
+        "fmihel/wu": "master",
+        "fmihel/ajax-plugin-session": "main"
     },
     "exclude": [
-        "*.json",
         "*.bat",
-        ".gitignore",
-        "*.pas",
-        "*.dfm",
-        "*.babelrc",
-        ".npmignore",
-        ".eslintignore",
-        "composer.*",
-        "*.js",
-        "*.md"
+        {
+            "fmihel/wu":[
+                "*.json",        
+                "*.gitignore",
+                "*.pas",
+                "*.dfm",
+                "*.babelrc",
+                "*.npmignore",
+                "*.eslintignore",
+                "composer.*",
+                "*.js",
+                "*.md",
+                "*.mpb"
+            ]
+        }
     ],
     "prod": {
-        "fmihel/ajax-plugin-session": "main",
-        "fmihel/wu": "master"
+        "fmihel/wu": "master",
+        "fmihel/ajax-plugin-session": "main"
     }
 }

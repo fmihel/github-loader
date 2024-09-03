@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 const fs = require('fs');
 const path = require('path');
 const argv = require('./argv');

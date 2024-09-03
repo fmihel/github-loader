@@ -1,23 +1,44 @@
-const path = require('path');
+/* eslint-disable array-callback-return */
+// const path = require('path');
 const fs = require('fs');
+const dir = require('./dir');
 
 class Filter {
     apply(repoName, toPath, config) {
         const { include: inc, exclude: exc } = config;
 
-        const include = inc.filter((t) => t.indexOf(':') === -1 || t.indexOf(`${repoName}:`) > -1).map((t) => t.replaceAll(`${repoName}:`, ''));
-        const exclude = exc.filter((t) => t.indexOf(':') === -1 || t.indexOf(`${repoName}:`) > -1).map((t) => t.replaceAll(`${repoName}:`, ''));
-        const list = this.files(toPath);
+        const include = this.rules(repoName, inc);
+        const exclude = this.rules(repoName, exc);
+
+        const list = dir.files(toPath, true);
 
         list.map((file) => {
             if ((exclude.length && this.assept(file, exclude)) || (include.length && !this.assept(file, include))) {
-                console.log('delete', file);
+                // console.log('delete', file);
                 fs.unlinkSync(file);
             }
         });
+        dir.delEmpty(toPath);
     }
 
-    assept(value, templates, repoName) {
+    rules(repoName, list) {
+        let out = [];
+
+        list.map((it) => {
+            if (typeof it === 'string') {
+                out.push(it);
+            } else {
+                Object.keys(it).map((repo) => {
+                    if (repo === repoName) {
+                        out = [...out, ...it[repo]];
+                    }
+                });
+            }
+        });
+        return out;
+    }
+
+    assept(value, templates) {
         for (let i = 0; i < templates.length; i++) {
             if (this._assept(value, templates[i])) {
                 return true;
@@ -34,21 +55,6 @@ class Filter {
     fileTemplateToRegExp(template) {
         const re = template.replaceAll('*', '\\S*').replaceAll('.', '\\.');
         return new RegExp(re);
-    }
-
-    files(dir) {
-        const t = this;
-        let out = [];
-        fs.readdirSync(dir).forEach((file) => {
-            const fullpath = path.join(dir, file);
-            const stat = fs.statSync(fullpath);
-            if (stat.isDirectory()) {
-                out = [...out, ...t.files(fullpath)];
-            } else {
-                out.push(fullpath);
-            }
-        });
-        return out;
     }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 const fs = require('fs');
 const path = require('path');
 const zip = require('./zip');
@@ -194,6 +195,7 @@ class actions {
             state = `rename ${path.join(authorPath, to)} to ${target}`;
             fs.renameSync(path.join(authorPath, to), target);
 
+            state = 'filter';
             filter.apply(repoName, target, config);
         } catch (e) {
             throw new Error(`${state}`);

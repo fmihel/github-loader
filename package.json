@@ -1,11 +1,12 @@
 {
-  "name": "github-loader",
-  "version": "1.0.0",
-  "description": "github loader",
+  "name": "fmihel-gitrep",
+  "version": "0.0.1",
+  "description": "github loader repositories",
   "main": "index.js",
   "scripts": {
-    "test": "node gitrep",
-    "gitrep": "node node_modules/fmihel-gitrep"
+    "npm-publish-patch": "npm version patch && npm publish",
+    "npm-publish-minor": "npm version minor && npm publish",
+    "npm-publish-major": "npm version major && npm publish"
   },
   "repository": {
     "type": "git",
@@ -21,9 +22,9 @@
   "author": "fmihel76@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fmihel/github-loader/issues"
+    "url": "https://github.com/fmihel/gitrep/issues"
   },
-  "homepage": "https://github.com/fmihel/github-loader#readme",
+  "homepage": "https://github.com/fmihel/gitrep#readme",
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",

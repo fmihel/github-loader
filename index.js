@@ -25,10 +25,4 @@ function main() {
     }
 }
 
-// const list = globSync('git-repo/**/*.php');
-
-// console.log(list);
 main();
-
-// gitrep._installRep('jquery/jquery', 'main', config.get());
-// gitrep._installRep('fmihel/console-log', 'master', config.get());

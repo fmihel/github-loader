@@ -49,8 +49,11 @@ class Config {
     }
 
     load() {
-        const configJSON = fs.readFileSync(this.configFileName);
-        return JSON.parse(configJSON);
+        if (fs.existsSync(this.configFileName)) {
+            const configJSON = fs.readFileSync(this.configFileName);
+            return JSON.parse(configJSON);
+        }
+        return {};
     }
 
     save() {

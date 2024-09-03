@@ -1,6 +1,6 @@
 {
   "name": "fmihel-gitrep",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "github loader repositories",
   "main": "index.js",
   "scripts": {

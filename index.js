@@ -21,7 +21,7 @@ function main() {
             actions.update(action.reps, config.get());
         }
     } else {
-        console.log('git rep loader v0.0.1');
+        console.log('gitrep v0.0.4');
     }
 }
 

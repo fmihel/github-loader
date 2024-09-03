@@ -5,7 +5,7 @@
 
 ## установка
 ```
-$ npm i fmihel/gitrep -D
+$ npm i fmihel-gitrep -D
 ```
 
 ## работа с репозиториями

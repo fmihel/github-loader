@@ -6,10 +6,6 @@ const download = require('./download');
 const configFile = require('./config');
 const filter = require('./filter');
 
-function rnd(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
 class actions {
     static async install(config) {
         const stat = {

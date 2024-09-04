@@ -2,27 +2,31 @@
 const config = require('./src/config');
 const actions = require('./src/actions');
 const argv = require('./src/argv');
+const plugins = require('./src/plugins');
 
-function main() {
+async function main() {
     const { action } = argv;
+    await plugins.init();
 
     if (action.type === 'install') {
         if (!action.reps.length) {
-            actions.install(config.get());
+            await actions.install(config.get());
         } else {
-            actions.add(action.reps, config.get());
+            await actions.add(action.reps, config.get());
         }
     } else if (action.type === 'uninstall') {
-        actions.unInstall(action.reps, config.get());
+        await actions.unInstall(action.reps, config.get());
     } else if (action.type === 'update') {
         if (!action.reps.length) {
-            actions.updateAll(config.get());
+            await actions.updateAll(config.get());
         } else {
-            actions.update(action.reps, config.get());
+            await actions.update(action.reps, config.get());
         }
     } else {
         console.log('gitrep v0.0.4');
     }
+
+    await plugins.done();
 }
 
 main();

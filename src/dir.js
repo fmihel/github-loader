@@ -48,6 +48,21 @@ class Dir {
         }
         return false;
     }
+
+    each(root, callback) {
+        const t = this;
+
+        fs.readdirSync(root).forEach((file) => {
+            const fullpath = path.join(root, file);
+            const stat = fs.statSync(fullpath);
+            if (stat.isDirectory()) {
+                callback({ path: fullpath, isDir: true, short: file });
+                t.each(fullpath, callback);
+            } else {
+                callback({ path: fullpath, isDir: false, short: file });
+            }
+        });
+    }
 }
 
 module.exports = new Dir();

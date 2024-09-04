@@ -18,6 +18,9 @@ const defalt = {
     // ...JSON.parse(configJSON),
     exclude: [],
     include: [],
+    plugins: {
+
+    },
 };
 
 class Config {

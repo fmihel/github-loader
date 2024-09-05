@@ -23,7 +23,7 @@ async function main() {
             await actions.update(action.reps, config.get());
         }
     } else {
-        console.log('gitrep v0.0.5');
+        console.log('gitrep v0.1.0');
     }
 
     await plugins.done();

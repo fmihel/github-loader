@@ -22,7 +22,9 @@ spl_autoload_register(function ($class) {
                     $exp = explode('\\\\', $key);
                     $local_class_path = $exp[count($exp) - 1];
                 }
-                $module = __DIR__ . $path . '/' . $local_class_path . '.php';
+                $module = implode('/', [__DIR__, $path, $local_class_path . '.php']);
+                $module = str_replace(['//', '\\/'], ['/', '\\\\'], $module);
+
             }
 
             if ($module && file_exists($module)) {
@@ -55,7 +57,11 @@ class PhpAutoloadPsr4 extends PluginClass {
 
     async createAutoload(config) {
         const t = this;
-        const { psr4 } = t.params; // psr4 = {namespace1:[path1,path2,..],namespace2:[...],...}
+        const psr4 = {};/// / psr4 = {namespace1:[path1,path2,..],namespace2:[...],...}
+
+        Object.keys(t.params.psr4).map((namespace) => {
+            psr4[namespace.replaceAll('\\', '\\\\')] = t.params.psr4[namespace];
+        });
 
         dir.each(config.dest, (it) => {
             if (!it.isDir && it.short === 'composer.json') {
@@ -109,7 +115,7 @@ class PhpAutoloadPsr4 extends PluginClass {
         Object.keys(autoload).map((namespace) => {
             const localPath = autoload[namespace];
             // console.log(path.join(project, localPath));
-            out[namespace] = `${path.join(project, localPath).replaceAll('\\', '\\\\')}`;
+            out[namespace] = `${path.join(project, localPath).replaceAll('\\', '/')}`;
         });
         return out;
     }

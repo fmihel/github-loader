@@ -40,6 +40,9 @@ class PhpAutoloadPsr4 extends PluginClass {
         super(params, config);
         this.params = {
             filename: path.resolve(path.join(config.dest, 'autoload.php')),
+            psr4: {
+
+            },
             ...this.params,
         };
     }
@@ -52,7 +55,7 @@ class PhpAutoloadPsr4 extends PluginClass {
 
     async createAutoload(config) {
         const t = this;
-        const psr4 = {}; // psr4 = {namespace1:[path1,path2,..],namespace2:[...],...}
+        const { psr4 } = t.params; // psr4 = {namespace1:[path1,path2,..],namespace2:[...],...}
 
         dir.each(config.dest, (it) => {
             if (!it.isDir && it.short === 'composer.json') {

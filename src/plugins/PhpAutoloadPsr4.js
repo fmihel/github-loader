@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 const path = require('path');
 const fs = require('fs');
 const PluginClass = require('../PluginClass.js');
@@ -10,25 +11,27 @@ spl_autoload_register(function ($class) {
 
     $psr4 = <%PSR4_OBJECT%>;
 
-    foreach ($psr4 as $key => $path) {
-        $module = false;
-        $search = strpos($class, $key);
+    foreach ($psr4 as $key => $paths) {
+        foreach ($paths as $path) {
+            $module = false;
+            $search = strpos($class, $key);
 
-        if ($search === 0) {
-            $local_class_path = substr($class, strlen($key) + 1);
-            if (!$local_class_path) {
-                $exp = explode('\\\\', $key);
-                $local_class_path = $exp[count($exp) - 1];
+            if ($search === 0) {
+                $local_class_path = substr($class, strlen($key));
+                if (!$local_class_path) {
+                    $exp = explode('\\\\', $key);
+                    $local_class_path = $exp[count($exp) - 1];
+                }
+                $module = __DIR__ . $path . '/' . $local_class_path . '.php';
             }
-            $module = __DIR__ . $path . '/' . $local_class_path . '.php';
-        }
 
-        if ($module && file_exists($module)) {
-            include $module;
-            return;
+            if ($module && file_exists($module)) {
+                include $module;
+                return;
+            }
         }
     }
-
+        
 });
 `;
 
@@ -49,14 +52,24 @@ class PhpAutoloadPsr4 extends PluginClass {
 
     async createAutoload(config) {
         const t = this;
-        let psr4 = {};
+        const psr4 = {}; // psr4 = {namespace1:[path1,path2,..],namespace2:[...],...}
 
         dir.each(config.dest, (it) => {
             if (!it.isDir && it.short === 'composer.json') {
                 const json = t.loadJson(it.path);
-                const autoload = t.getAutoload(json);
+                const autoload = t.getAutoloadPsr4(json);
+
                 if (autoload) {
-                    psr4 = { ...psr4, ...t.getPsr4(autoload, config, it.path) };
+                    const add = t.getPsr4(autoload, config, path.dirname(it.path));
+                    Object.keys(add).map((n) => {
+                        const namespace = n.replaceAll('\\', '\\\\');
+                        if (!(namespace in psr4)) {
+                            psr4[namespace] = [];
+                        }
+                        psr4[namespace].push(add[n]);
+                    });
+                    // console.log(t.getPsr4(autoload, config, it.path));
+                    // psr4 = { ...psr4, ...t.getPsr4(autoload, config, it.path) };
                 }
             }
         });
@@ -67,7 +80,10 @@ class PhpAutoloadPsr4 extends PluginClass {
                 PSR4_OBJECT,
                 `[${
                     Object.keys(psr4).reduce((a, b) => {
-                        const val = `"${b}"=>"${psr4[b]}"`;
+                        const val = `"${b}"=>[${psr4[b].reduce((c, d) => {
+                            const mean = `"${d}"`;
+                            return !c ? mean : `${c},${mean}`;
+                        }, '')}]`;
                         return !a ? val : `${a},\n\t\t\t${val}`;
                     }, '')}]`,
             ),
@@ -79,19 +95,20 @@ class PhpAutoloadPsr4 extends PluginClass {
         return JSON.parse(configJSON);
     }
 
-    getAutoload(json) {
+    getAutoloadPsr4(json) {
         return (('autoload' in json) && ('psr-4' in json.autoload)) ? json.autoload['psr-4'] : false;
     }
 
-    getPsr4(autoload, config, composerFilePath) {
+    getPsr4(autoload, config, projectPath) {
         const out = {};
 
+        const project = path.resolve(projectPath).replace(path.resolve(config.dest), '');
         Object.keys(autoload).map((namespace) => {
             const localPath = autoload[namespace];
-
-            out[namespace] = localPath;
+            // console.log(path.join(project, localPath));
+            out[namespace] = `${path.join(project, localPath).replaceAll('\\', '\\\\')}`;
         });
-        return {};
+        return out;
     }
 }
 

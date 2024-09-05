@@ -31,8 +31,8 @@ class Config {
             ...defalt,
             ...this.load(),
             ...argv.config,
-        };
 
+        };
         this.data.dest = this.data.dest || this.data.cache;
     }
 

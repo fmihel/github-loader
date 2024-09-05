@@ -18,15 +18,22 @@ $ node node_modules/fmihel-gitrep i
 ```
 <hr>
 
-Добавление репозитория
+Добавление репозитория.
 
 ```bash
 $ node node_modules/fmihel-gitrep install <REPO> <REPO> ...
 $ node node_modules/fmihel-gitrep i <REPO> <REPO> ...
 ```
+
 Ex:
 ```bash
 $ node node_modules/fmihel-gitrep i jquery/jquery
+```
+По умолчанию добавление/загрузка идет из ветки main. Если нужно поменять ветку ( или ее не существует), либо грузить из ветки с определенным тегом, то нужно указать ветку/тег после двоеточия ``:``
+Ex:
+```bash
+$ node node_modules/fmihel-gitrep i mygit/project:master - загрузка из ветки master
+$ node node_modules/fmihel-gitrep i mygit/project:tags/v1.0.1 - загрузка из ветки v1.0.1
 ```
 <hr>
 
